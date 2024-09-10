@@ -20,6 +20,7 @@ class TransactionViewModel @Inject constructor(
     private val balanceFormatter: BalanceFormatter,
 ) : ViewModel(), LifecycleObserver {
 
+    // Backing property for UI State
     private val _uiState = MutableStateFlow(TransactionUiState())
     val uiState: StateFlow<TransactionUiState> = _uiState
 
@@ -30,8 +31,13 @@ class TransactionViewModel @Inject constructor(
     // Load all transactions and calculate the balance and status message
     fun loadTransactions() {
         viewModelScope.launch {
-            val transactions = transactionUseCase.getAllTransactions()
-            updateUiStateWithTransactions(transactions)
+            try {
+                val transactions = transactionUseCase.getAllTransactions()
+                updateUiStateWithTransactions(transactions)
+            } catch (e: Exception) {
+                // Handle error and update UI state
+                _uiState.update { it.copy(errorMessage = "Failed to load transactions") }
+            }
         }
     }
 
@@ -78,7 +84,8 @@ class TransactionViewModel @Inject constructor(
                 allTransactions = transactions,
                 filteredTransactions = transactions,
                 balance = balance,
-                statusMessage = statusMessage
+                statusMessage = statusMessage,
+                errorMessage = null // Clear any previous errors
             )
         }
     }

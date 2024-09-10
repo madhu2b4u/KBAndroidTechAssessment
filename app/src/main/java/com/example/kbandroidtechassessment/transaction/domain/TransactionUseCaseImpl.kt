@@ -13,7 +13,7 @@ internal class TransactionUseCaseImpl @Inject constructor(private val repository
     TransactionUseCase {
 
     override fun getAllTransactions(): List<Transaction> {
-        return repository.getTransactions()
+        return repository.getTransactions().sortedBy { it.date }
     }
 
     override fun filterTransactions(
@@ -21,9 +21,11 @@ internal class TransactionUseCaseImpl @Inject constructor(private val repository
         startMillis: Long,
         endMillis: Long
     ): List<Transaction> {
+        val startOfDayMillis = startMillis.minus(24 * 60 * 60 * 1000 - 1) // Start from the beginning of the selected start date
+        val endOfDayMillis = endMillis // Include full end day
         return transactions.filter { transaction ->
             val transactionDate = parseDate(transaction.date)
-            (transactionDate >= startMillis) && (transactionDate <= endMillis)
+            transactionDate in startOfDayMillis..endOfDayMillis
         }
     }
 

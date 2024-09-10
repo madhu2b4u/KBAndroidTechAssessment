@@ -73,68 +73,40 @@ class TransactionViewModelTest {
         assertThat(uiState.statusMessage).isEqualTo("Overdrawn: $-1050.00")
     }
 
-    /* @Test
-     fun `test setDateFilter updates UI state with filtered transactions and balance`() = runTest {
-         // Given
-         val allTransactions = listOf(
-             Transaction("2024-09-01", "Groceries", -50.0),
-             Transaction("2024-09-02", "Rent", -1000.0)
-         )
-         val filteredTransactions = listOf(
-             Transaction("2024-09-01", "Groceries", -50.0)
-         )
+  /*  // Test case for applying a date filter and ensuring filtered transactions are correct
+    @Test
+    fun `test setDateFilter updates UI state with filtered transactions and balance`() = runTest {
+        // Given
+        val allTransactions = listOf(
+            Transaction("2024-09-01", "Groceries", -50.0),
+            Transaction("2024-09-05", "Rent", -1000.0)
+        )
+        val filteredTransactions = listOf(
+            Transaction("2024-09-01", "Groceries", -50.0)
+        )
 
-         // Date format for parsing transaction dates
-         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        // Mock the filterTransactions() method to return a filtered list
+        every { transactionUseCase.filterTransactions(allTransactions, 1000L, 2000L) } returns filteredTransactions
 
-         // Convert "2024-09-01" 00:00:00 to millis
-         val calendarStart = Calendar.getInstance().apply {
-             set(2024, Calendar.SEPTEMBER, 1, 0, 0, 0)
-         }
-         val startMillis = calendarStart.timeInMillis
+        // Mock balanceFormatter response for the filtered balance
+        every { balanceFormatter.formatBalanceStatus(-50.0) } returns "Overdrawn: $-50.00"
 
-         // Set endMillis to the start of "2024-09-02" 00:00:00 to exclude it
-         val calendarEnd = Calendar.getInstance().apply {
-             set(2024, Calendar.SEPTEMBER, 2, 0, 0, 0)  // Set to the start of 2024-09-02
-         }
-         val endMillis = calendarEnd.timeInMillis
+        // Preload all transactions
+        viewModel.loadTransactions()
 
-         // Log for debugging the filtering range
-         println("Start millis: $startMillis (${dateFormat.format(startMillis)})")
-         println("End millis: $endMillis (${dateFormat.format(endMillis)})")
+        // When
+        viewModel.setDateFilter(1000L, 2000L)
 
-         // Mock filterTransactions to filter based on date range
-         every { transactionUseCase.filterTransactions(allTransactions, startMillis, endMillis) } answers {
-             allTransactions.filter { transaction ->
-                 val transactionDate = dateFormat.parse(transaction.date)?.time ?: 0L
-                 // Log the transaction date for debugging
-                 println("Transaction date: ${transaction.date} (millis: $transactionDate)")
-                 // Filter strictly within the date range (start <= transactionDate < end)
-                 transactionDate >= startMillis && transactionDate < endMillis  // STRICTLY LESS THAN endMillis
-             }
-         }
+        // Ensure coroutine execution completes
+        advanceUntilIdle()
 
-         // Preload all transactions
-         viewModel.loadTransactions()
+        // Then
+        val uiState = viewModel.uiState.first()
 
-         // When
-         viewModel.setDateFilter(startMillis, endMillis)
-
-         // Ensure coroutine execution completes
-         advanceUntilIdle()
-
-         // Then
-         val uiState = viewModel.uiState.first()
-
-         // Log for debugging to see the filtered transactions
-         println("Filtered Transactions: ${uiState.filteredTransactions}")
-
-         // Assertions
-         assertThat(uiState.filteredTransactions).isEqualTo(filteredTransactions)
-         assertThat(uiState.balance).isEqualTo(-1000.0)
-         assertThat(uiState.statusMessage).isEqualTo("Overdrawn: $-1000.00")
-
-     }
+        assertThat(uiState.filteredTransactions).isEqualTo(filteredTransactions)
+        assertThat(uiState.balance).isEqualTo(-50.0)
+        assertThat(uiState.statusMessage).isEqualTo("Overdrawn: $-50.00")
+    }
 
 
      @Test
@@ -177,8 +149,8 @@ class TransactionViewModelTest {
          assertThat(uiState.filteredTransactions).isEqualTo(allTransactions)  // Should restore all transactions
          assertThat(uiState.balance).isEqualTo(-1050.0)  // Correct total balance after reset
          assertThat(uiState.statusMessage).isEqualTo("Overdrawn: $-1050.00")  // Correct status message for the total balance
-     }*/
-
+     }
+*/
 
     // Test case to ensure balance is updated based on the transactions
     @Test

@@ -8,5 +8,6 @@ data class TransactionUiState(
     val balance: Double = 0.0,
     val startDate: Long? = null,
     val endDate: Long? = null,
-    val statusMessage: String = ""
+    val statusMessage: String = "",
+    val errorMessage: String? = null // Error message in case of any failure
 )
